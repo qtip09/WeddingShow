@@ -1,21 +1,11 @@
 spring:
   datasource:
     #测试环境
-    url: jdbc:mysql://localhost:3306/wedding_show?serverTimezone=GMT%2B8&characterEncoding=utf-8
-    username: xxxxxx
-    password: xxxxxx
+    url: jdbc:mysql://localhost:13306/wedding_show?serverTimezone=GMT%2B8&characterEncoding=utf-8
+    username: root
+    password: fjy971017
     hikari:
       max-lifetime: 30000
-token:
-  wechat:
-    # 小程序配置
-    mini-program:
-      app-id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      app-secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    # 公众号配置
-    public-program:
-      app-id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      app-secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 share:
   link: xxxxxxxxxx
@@ -23,6 +13,3 @@ share:
   desc: xxxxxxxxxxx
   image-url: xxxxxxxx
 
-admin-password: xxxxx
-
-send-bullet-able: xxxxx

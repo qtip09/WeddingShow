@@ -7,7 +7,7 @@ spring:
   application:
     name: weddingShow
   profiles:
-    active: prod
+    active: @profiles.active@
 
   servlet:
     multipart:
@@ -22,3 +22,18 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+token:
+  wechat:
+    # 小程序配置
+    mini-program:
+      app-id: @wechat.mini-program.app-id@
+      app-secret: @wechat.mini-program.app-secret@
+    # 公众号配置
+    public-program:
+      app-id: @wechat.public-program.app-id@
+      app-secret: @wechat.public-program.app-id@
+
+admin-password: @admin.admin-password@
+
+send-bullet-able: true

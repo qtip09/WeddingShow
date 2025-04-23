@@ -15,7 +15,33 @@
 	<description>weddingServer</description>
 	<properties>
 		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profiles.active>dev</profiles.active>
+				<wechat.mini-program.app-id>wx30857591e2243965</wechat.mini-program.app-id>
+				<wechat.mini-program.app-secret>232e0d036541c2161161029c5b53ef48</wechat.mini-program.app-secret>
+				<wechat.public-program.app-id>wx99aaf35f02e0d5a8</wechat.public-program.app-id>
+				<wechat.public-program.app-secret>cfc4313772e6295607ba9549d6c4df16</wechat.public-program.app-secret>
+				<admin.admin-password>ab_cd@12345</admin.admin-password>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<profiles.active>prod</profiles.active>
+				<wechat.mini-program.app-id>wx30857591e2243965</wechat.mini-program.app-id>
+				<wechat.mini-program.app-secret>232e0d036541c2161161029c5b53ef48</wechat.mini-program.app-secret>
+				<wechat.public-program.app-id>wx99aaf35f02e0d5a8</wechat.public-program.app-id>
+				<wechat.public-program.app-secret>cfc4313772e6295607ba9549d6c4df16</wechat.public-program.app-secret>
+				<admin.admin-password>fjy971017@</admin.admin-password>
+			</properties>
+		</profile>
+	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
