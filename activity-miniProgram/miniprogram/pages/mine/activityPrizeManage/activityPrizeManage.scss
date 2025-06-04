@@ -1,0 +1,165 @@
+/* pages/mine/bulletManage/bulletManage.wxss */
+.button-example {
+  margin: 32rpx;
+  display: flex;
+  gap: 0.75rem; /* 12px */
+}
+
+.group-btn {
+  flex: 1;      /* 平均分配宽度 */
+}
+
+.add-btn-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 32rpx;
+  /* 移除左右 padding，改为 border-box 盒模型 */
+  padding: 0; 
+  box-sizing: border-box; /* 确保内边距不影响宽度 */
+  z-index: 999;
+}
+
+.add-btn-container t-button {
+  width: 100%; /* 按钮宽度撑满容器 */
+  max-width: none; /* 移除最大宽度限制 */
+  margin: 0; /* 移除居中 margin */
+  /* 可选：添加左右边距（若需要按钮与屏幕边缘有间隔） */
+   padding: 0 32rpx;
+}
+.award-user-dialog {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.dialog-wrapper {
+  width: 90%;
+  max-width: 680rpx;
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 40rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  font-size: 34rpx;
+  font-weight: 500;
+}
+
+.close-icon {
+  cursor: pointer;
+}
+
+.prize-info {
+  padding: 24rpx 40rpx;
+  background: #f5f7fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.prize-count {
+  color: #ff4d4f;
+}
+
+.user-list-container {
+  padding: 24rpx 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.list-header {
+  padding: 0 40rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-count {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.user-list {
+  padding: 0 40rpx;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 30rpx;
+  margin-bottom: 8rpx;
+}
+
+.user-phone {
+  font-size: 26rpx;
+  color: #888;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+  color: #999;
+}
+
+.add-user-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 0;
+  color: #1677ff;
+  font-size: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  cursor: pointer;
+}
+
+.add-user-form {
+  padding: 24rpx 40rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32rpx;
+}
+
+.form-buttons .tdesign-button {
+  margin-left: 20rpx;
+}

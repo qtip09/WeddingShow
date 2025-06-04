@@ -1,1 +1,4 @@
 /* pages/mine/bulletManage/bulletManage.wxss */
+.t-cell {
+  overflow: visible !important; /* 确保内容不被裁剪 */
+}

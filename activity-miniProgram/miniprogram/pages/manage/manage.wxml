@@ -2,4 +2,5 @@
         <t-grid-item text="活动管理" description="查看中奖人信息" image="https://tdesign.gtimg.com/miniprogram/images/example1.png" url="../mine/activityManage/activityManage" />
         <t-grid-item text="弹幕管理" description="禁用用户发言" image="https://tdesign.gtimg.com/miniprogram/images/example1.png" url="../mine/bulletManage/bulletManage" />
         <t-grid-item text="轮播图管理" description="管理大屏轮播图" image="https://tdesign.gtimg.com/miniprogram/images/example1.png" url="../mine/imageManage/imageManage" />
+        <t-grid-item text="奖品管理" description="管理活动奖品" image="https://tdesign.gtimg.com/miniprogram/images/example1.png" url="../mine/activityPrizeManage/activityPrizeManage" />
     </t-grid>

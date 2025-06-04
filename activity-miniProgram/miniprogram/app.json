@@ -6,7 +6,10 @@
         "pages/manage/manage",
         "pages/mine/activityManage/activityManage",
         "pages/mine/bulletManage/bulletManage",
-        "pages/mine/imageManage/imageManage"
+        "pages/mine/imageManage/imageManage",
+        "pages/mine/activityPrizeManage/activityPrizeManage",
+        "pages/mine/activityPrizeAdd/activityPrizeAdd",
+        "pages/mine/activityPrizeEdit/activityPrizeEdit"
     ],
     "window": {
         "backgroundTextStyle": "light",

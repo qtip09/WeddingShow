@@ -1,0 +1,15 @@
+{
+    "component": true,
+    "usingComponents": {
+        "t-cell": "tdesign-miniprogram/cell/cell",
+        "t-switch": "tdesign-miniprogram/switch/switch",
+        "t-button": "tdesign-miniprogram/button/button",
+        "t-popup": "tdesign-miniprogram/popup/popup",
+        "t-icon": "tdesign-miniprogram/icon/icon",
+        "t-fab": "tdesign-miniprogram/fab/fab",
+        "t-input": "tdesign-miniprogram/input/input",
+        "t-dialog": "tdesign-miniprogram/dialog/dialog",
+        "t-upload": "tdesign-miniprogram/upload/upload"
+    },
+    "enablePullDownRefresh": false
+}  

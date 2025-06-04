@@ -19,7 +19,7 @@
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
   },
-  "libVersion": "2.20.2",
+  "libVersion": "3.8.4",
   "condition": {
     "miniprogram": {
       "list": [

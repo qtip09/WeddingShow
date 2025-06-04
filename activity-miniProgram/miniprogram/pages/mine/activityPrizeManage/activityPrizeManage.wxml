@@ -1,0 +1,176 @@
+
+<!-- 列表循环 -->
+<block wx:for="{{list}}" wx:key="id">
+  <t-cell
+    title="{{item.prizeName}}"
+    description="数量：{{item.count}}"
+    align="top"
+    image="{{item.filePath}}"
+    hover
+    bordered="{{false}}"
+  >
+  <t-icon 
+      name="delete" 
+      size="24" 
+      color="#ff4d4f" 
+      slot="note" 
+      bind:click="onDeleteTap"
+      data-id="{{item.id}}"
+      data-name="{{item.prizeName}}"
+    />
+  </t-cell>
+  <view class="button-example flex gap-3">
+    <t-button 
+      theme="light" 
+      size="large" 
+      t-class="group-btn flex-1"
+      bind:tap="onEditPrizeTap"
+      data-id="{{item.id}}"
+    >
+      编辑
+    </t-button>
+    <t-button 
+      theme="primary" 
+      size="large" 
+      t-class="group-btn flex-1"
+      bind:tap="onAssignUserTap"
+      data-id="{{item.id}}"
+    >
+      指定获奖人员
+    </t-button>
+  </view>
+</block>
+
+<!-- 新增固定底部按钮 -->
+<view class="add-btn-container">
+  <t-button 
+    theme="danger" 
+    size="large" 
+    bind:tap="onAddPrizeTap"
+    style="width: 100%;"
+  >
+    新增奖项
+  </t-button>
+</view>
+
+<!-- 获奖人员管理弹窗 -->
+<view class="award-user-dialog" wx:if="{{awardUserDialogShow}}">
+  
+  <view class="dialog-wrapper">
+    <view class="dialog-content">
+      <!-- 标题栏 -->
+      <view class="dialog-header">
+        <view class="dialog-title">获奖人员管理</view>
+        <t-icon
+          name="close" 
+          size="35" 
+          color="#666" 
+          bind:click="onCloseDialog"
+          class="close-icon"
+          data-name="close"
+        />
+      </view>
+      
+      <!-- 奖项信息 -->
+      <view class="prize-info">
+        <text class="prize-name">奖项：{{currentPrize.prizeName}}</text>
+        <text class="prize-count">剩余数量：{{currentPrize.remainingCount}}</text>
+      </view>
+      
+      <!-- 已指定用户列表 -->
+      <view class="user-list-container">
+        <view class="list-header">
+          <text>已指定获奖人员</text>
+          <text class="user-count">{{awardUsers.length}}人</text>
+        </view>
+        
+        <view class="user-list">
+          <block wx:for="{{awardUsers}}" wx:key="id">
+            <view class="user-item">
+              <view class="user-info">
+                <text class="user-name">{{item.nickName}}</text>
+                <text class="user-phone">{{item.openId || '未填写'}}</text>
+              </view>
+              <t-icon 
+                name="delete" 
+                size="20" 
+                color="#ff4d4f" 
+                bindtap="onDeleteUser"
+                data-id="{{item.id}}"
+              />
+            </view>
+          </block>
+          
+          <!-- 空状态 -->
+          <view class="empty-state" wx:if="{{!awardUsers.length}}">
+            <t-icon name="empty" size="48" color="#cccccc" />
+            <text>暂无获奖人员</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 新增按钮 -->
+      <view class="add-user-btn" bindtap="showAddUserForm">
+        <t-icon name="add" size="20" color="#1677ff" />
+        <text>新增获奖人员</text>
+      </view>
+      
+      <!-- 新增表单（默认隐藏） -->
+      <view class="add-user-form" wx:if="{{addUserFormShow}}">
+        <view class="tdesign-form-item">
+          <view class="tdesign-form-label">姓名</view>
+          <!-- 改为搜索输入框，添加搜索按钮和列表 -->
+          <view class="search-container">
+            <t-input 
+              class="tdesign-form-input" 
+              name="searchUserName" 
+              value="{{searchKey}}" 
+              bind:change="onSearchInput" 
+              placeholder="请输入姓名搜索"
+              required
+            />
+            <t-icon 
+              name="search" 
+              size="20" 
+              color="#1677ff" 
+              bind:click="handleSearch" 
+              class="search-icon"
+            />
+          </view>
+
+          <!-- 搜索结果列表 -->
+          <view class="search-result" wx:if="{{searchResults.length > 0}}">
+            <block wx:for="{{searchResults}}" wx:key="userId">
+              <view 
+                class="result-item" 
+                bindtap="selectUserFromSearch" 
+                data-user="{{item}}"
+              >
+                {{item.nickName}}（{{item.openid || '未绑定'}}）
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <!-- 移除手机号输入框 -->
+        
+        <view class="form-buttons">
+          <t-button 
+            theme="default" 
+            size="medium" 
+            bindtap="hideAddUserForm"
+          >
+            取消
+          </t-button>
+          <t-button 
+            theme="primary" 
+            size="medium" 
+            bindtap="handleAddUser"
+          >
+            确认添加
+          </t-button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -5,12 +5,15 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vip.maosi.weddingServer.controller.bo.addActivityPrizeBo;
+import vip.maosi.weddingServer.controller.bo.addActivityWinSpecifyBo;
+import vip.maosi.weddingServer.controller.bo.editActivityPrizeBo;
 import vip.maosi.weddingServer.domain.ActivityPrize;
+import vip.maosi.weddingServer.domain.User;
 import vip.maosi.weddingServer.dto.ActivityInfoDto;
+import vip.maosi.weddingServer.dto.ActivityPrizeInfoDto;
+import vip.maosi.weddingServer.dto.ActivityWinSpecifyDto;
 import vip.maosi.weddingServer.dto.ActivityWinUser;
 import vip.maosi.weddingServer.response.RGenerator;
 import vip.maosi.weddingServer.response.ResEntity;
@@ -47,6 +50,43 @@ public class ActivityController {
         val activityInfo = activityService.getActivityInfo(code);
         if (activityInfo == null) return RGenerator.resCustom(-1, "没有活动信息");
         return RGenerator.resSuccess(activityInfo);
+    }
+
+
+    @GetMapping("/getActivityPrizeList")
+    public ResEntity<ActivityPrizeInfoDto> getActivityPrizeList(@RequestParam @NotBlank(message = "code不能为空") String code) {
+        val activityPrizeInfo = activityService.getActivityPrizeInfoList(code);
+        if (activityPrizeInfo == null) return RGenerator.resCustom(-1, "没有活动信息");
+        return RGenerator.resSuccess(activityPrizeInfo);
+    }
+
+    @PostMapping("/addActivityPrize")
+    public ResEntity<Boolean> addActivityPrize(@RequestBody addActivityPrizeBo bo){
+        return RGenerator.resSuccess(activityService.addActicityPrize(bo));
+    }
+
+    @GetMapping("/delActivityPrize")
+    public ResEntity<Boolean> addActivityPrize(@RequestParam Integer activityPrizeId){
+        return RGenerator.resSuccess(activityService.delActivityPrize(activityPrizeId));
+    }
+
+    @PostMapping("/editActivityPrize")
+    public ResEntity<Boolean> editActivityPrize(@RequestBody editActivityPrizeBo bo){
+        return RGenerator.resSuccess(activityService.editActicityPrize(bo));
+    }
+
+    @PostMapping("getActivityWinSpecifyList")
+    public ResEntity<List<ActivityWinSpecifyDto>> getActivityWinSpecifyList(@RequestBody ActivityPrize activityPrize){
+        return RGenerator.resSuccess(activityService.getActivityWinSpecifyList(activityPrize));
+    }
+    @GetMapping("searchUsers")
+    public ResEntity<List<User>> searchUsers(@RequestParam String name){
+        return RGenerator.resSuccess(activityService.searchUsers(name));
+    }
+
+    @PostMapping("addActivityWinSpecify")
+    public ResEntity<Boolean> addActivityWinSpecify(@RequestBody addActivityWinSpecifyBo bo){
+        return RGenerator.resSuccess(activityService.addActivityWinSpecify(bo));
     }
 
     /**

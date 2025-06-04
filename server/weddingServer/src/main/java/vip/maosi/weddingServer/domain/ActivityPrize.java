@@ -49,6 +49,8 @@ public class ActivityPrize implements Serializable {
     @Size(max = 255, message = "排序码最大长度要小于 255")
     private String order;
 
+    private Boolean deleted;
+
     private static final long serialVersionUID = 1L;
 
     public static final String COL_ID = "id";

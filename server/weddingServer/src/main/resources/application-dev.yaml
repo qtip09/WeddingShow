@@ -1,9 +1,9 @@
 spring:
   datasource:
     #测试环境
-    url: jdbc:mysql://localhost:13306/wedding_show?serverTimezone=GMT%2B8&characterEncoding=utf-8
+    url: jdbc:mysql://1.tcp.vip.cpolar.top:12201/wedding_show?serverTimezone=GMT%2B8&characterEncoding=utf-8
     username: root
-    password: fjy971017
+    password: fjy971017@
     hikari:
       max-lifetime: 30000
 

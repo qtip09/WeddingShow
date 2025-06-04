@@ -14,7 +14,7 @@
                 <image style="width: 100rpx;height: 100rpx;margin: 0 20rpx;" src="../../img/valentine_011-hearts-love-affection-like.png" mode="widthFix" />
 
                 <view style="margin-top: -10rpx;">
-                    <!-- <view style="margin-top: -20rpx;font-size: 28rpx;">biubiubiu~</view> -->
+                    <view style="margin-top: -20rpx;font-size: 28rpx;">{{item.nickName}}：</view> 
                     <view class="colorful-text">
                         {{item.text}}
                     </view>
