@@ -1,4 +1,4 @@
-<image src="../../img/wedding.jpg" mode="" class="bg" />
+<image src="/subPackage/img/wedding.jpg" mode="" class="bg" />
 <!-- 顶部 -->
 <view class="wrapper">
     <view wx:if="{{true}}">
@@ -62,9 +62,9 @@
         <view class="wrapperSuccess">
             <view class="success">
                 <view class="arc radus">
-                    <image src="../../img/successLeft.png" style="width: 44px; height: 40px;position: absolute;top: -40rpx;right: 30rpx;" mode="" />
+                    <image src="../../subPackage/img/successLeft.png" style="width: 44px; height: 40px;position: absolute;top: -40rpx;right: 30rpx;" mode="" />
                     温馨提示
-                    <image src="../../img/successTop.png" style="width: 44px; height: 40px;left: -50rpx;position: absolute; top: 40rpx;" mode="" />
+                    <image src="../../subPackage/img/successTop.png" style="width: 44px; height: 40px;left: -50rpx;position: absolute; top: 40rpx;" mode="" />
                 </view>
 
                 <block wx:if="{{join && !open}}">

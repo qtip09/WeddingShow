@@ -1,4 +1,12 @@
 {
+    "subPackages": [
+      {
+        "root": "subPackage/img",
+        "name": "images",
+        "pages": [],
+        "independent": false
+      }
+    ],
     "pages": [
         "pages/activity/activity",
         "pages/mine/mine",
@@ -27,14 +35,14 @@
             {
                 "pagePath": "pages/activity/activity",
                 "text": "活动",
-                "iconPath": "img/xin-hunli.png",
-                "selectedIconPath": "img/xin-hunli.png"
+                "iconPath": "/subPackage/img/xin-hunli.png",
+                "selectedIconPath": "/subPackage/img/xin-hunli.png"
             },
             {
                 "pagePath": "pages/bullet/bullet",
                 "text": "弹幕",
-                "iconPath": "img/bell.png",
-                "selectedIconPath": "img/bell.png"
+                "iconPath": "/subPackage/img/bell.png",
+                "selectedIconPath": "/subPackage/img/bell.png"
             }
         ]
     }
