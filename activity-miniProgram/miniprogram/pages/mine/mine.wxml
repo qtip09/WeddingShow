@@ -5,7 +5,14 @@
         <text class="userinfo-nickname">{{userInfo.nickName}}</text>
         <view wx:if="{{!userInfo.avatarUrl}}" class="loginBtn" bindtap="getUserProfile">立即登录</view>
     </view>
-    <view wx:if="{{userInfo.avatarUrl}}" class="loginBtn" bindtap="getUserProfile">更新头像</view>
+    <view wx:if="{{userInfo.avatarUrl}}" class="loginBtn" >
+      <button 
+        wx:if="{{userInfo.avatarUrl}}" 
+        class="hidden-button" 
+        open-type="chooseAvatar" 
+        bind:chooseavatar="onChooseAvatar"
+      >更新头像</button>
+    </view>
 </view>
 <view class="blockBoxs" bind:tap="handlePopup">
     <t-icon  name="star" size="150rpx" />

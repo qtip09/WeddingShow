@@ -87,4 +87,16 @@ public class WXService {
                 .setGender(userInfo.getGender());
         return userService.updateById(user);
     }
+
+    public boolean updateUserInfo(String openid, WXUserInfoDto userInfo){
+        val user = getUser(openid);
+        if (user == null) return false;
+        user.setNickName(userInfo.getNickName())
+                .setAvatarUrl(userInfo.getAvatarUrl())
+                .setCity(userInfo.getCity())
+                .setCountry(user.getCountry())
+                .setProvince(userInfo.getProvince())
+                .setGender(userInfo.getGender());
+        return userService.updateById(user);
+    }
 }

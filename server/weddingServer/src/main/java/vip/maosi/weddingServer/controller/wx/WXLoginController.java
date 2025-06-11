@@ -72,4 +72,23 @@ public class WXLoginController {
         }
         return RGenerator.resCustom(-1, "获取失败,请重试");
     }
+
+    /**
+     * 更新用户信息
+     *
+     * @param userInfo 用户信息
+     * @return
+     */
+    @PostMapping("/updateUserInfo")
+    public ResEntity<String> updateUserInfo(HttpServletRequest request, @RequestBody @Validated WXUserInfoDto userInfo) {
+        val openid = request.getHeader("openid");
+        val updateFlag = wxService.updateUserInfo(openid, userInfo);
+        if (updateFlag) {
+            return RGenerator.resSuccess("更新成功");
+        }
+        return RGenerator.resCustom(-1, "更新成功,请重试");
+    }
+
+
+
 }

@@ -29,4 +29,10 @@ export default class activityApi {
             baseUrl + '/activity/getActivityStatus',
             data
         )
+
+    static updateUserInfo = (data: any) =>
+    httpRequest.post<any>(
+        baseUrl + '/wx/updateUserInfo',
+        data
+    )
 }

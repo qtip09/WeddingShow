@@ -329,3 +329,61 @@ page {
     font-weight: bold;
     color: #FFFFFF;
 }
+
+/* 用户信息弹窗样式 */
+.user-info-popup {
+  width: 80vw;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+}
+
+.popup-header {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.avatar-section, .nickname-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.label {
+  width: 120rpx;
+  font-size: 32rpx;
+}
+
+.avatar-btn {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  line-height: 1;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 1px solid #eee;
+}
+
+.nickname-input {
+  flex: 1;
+  border: 1px solid #eee;
+  padding: 20rpx;
+  border-radius: 8rpx;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40rpx;
+}
+
+.popup-buttons t-button {
+  width: 48%;
+}

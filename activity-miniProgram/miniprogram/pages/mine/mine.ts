@@ -12,6 +12,30 @@ Page({
         pwd: "",
         visible: false
     },
+    onChooseAvatar(e: any) {
+      // 从事件对象中获取用户选择的头像URL
+      const { avatarUrl } = e.detail;
+      console.log(e);
+      // 更新页面数据和全局数据
+      const updatedUserInfo = {
+          ...this.data.userInfo,  // 保留原有用户信息
+          avatarUrl: avatarUrl    // 更新头像URL
+      };
+      
+      // 设置页面数据
+      this.setData({
+          userInfo: updatedUserInfo
+      });
+      
+      // 同时更新全局用户信息（如果需要）
+      app.globalData.userInfo = updatedUserInfo;
+      
+      // 显示成功提示
+      wx.showToast({
+          title: '头像更新成功',
+          icon: 'success'
+      });
+    },
     onLoad() {
         // @ts-ignore
         if (wx.getUserProfile) {

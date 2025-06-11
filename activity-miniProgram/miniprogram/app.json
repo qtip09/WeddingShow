@@ -3,7 +3,7 @@
       {
         "root": "subPackage/img",
         "name": "images",
-        "pages": [],
+        "pages": ["placeholder"],
         "independent": false
       }
     ],

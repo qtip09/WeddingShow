@@ -2,7 +2,7 @@ import api from "../../utils/activityApi"
 import requestByOpenid from "../../utils/requestByOpenid"
 import getUserInfo from '../../utils/common'
 let app = getApp()
-
+import baseUrl from '../../utils/base'
 Page({
 
     /**
@@ -19,13 +19,34 @@ Page({
         animationData: {},
         visible: false,
         num: 0,
-        openid: ""
+        openid: "",
+        imgPath: baseUrl + "/wedding.png",
+        isImageValid: false,
+        defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
+        userInfoVisible: false,
+        tempAvatarUrl: '',
+        tempNickName: '',
+        isUserInfoReady: false
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
+    checkImageExists() {
+      wx.getImageInfo({
+        src: this.data.imgPath,
+        success: () => {
+          console.log("图片有效");
+          this.setData({ isImageValid: true });
+        },
+        fail: (err) => {
+          console.error("图片无效或路径错误", err);
+          this.setData({ isImageValid: false });
+        },
+      });
+    },
     onLoad() {
+        this.checkImageExists();
         this.scaleAnimation()
         api.getActivityPrizes({ code: this.data.activityCode }).then((res) => {
             let dateEnd = new Date(res.data.activityEndDate)
@@ -153,6 +174,84 @@ Page({
             })
         }
     },
+
+    // 显示用户信息弹窗
+  showUserInfoPopup() {
+    // 如果已有用户信息，直接参与
+    if (app.globalData.userInfo?.nickName) {
+      this.joinActivityApi();
+      return;
+    }
+    
+    this.setData({
+      userInfoVisible: true,
+      tempAvatarUrl: app.globalData.userInfo?.avatarUrl || '',
+      tempNickName: app.globalData.userInfo?.nickName || ''
+    });
+  },
+
+  // 关闭用户信息弹窗
+  closeUserInfoPopup() {
+    this.setData({
+      userInfoVisible: false
+    });
+  },
+
+  // 选择头像回调
+  onChooseAvatar(e: any) {
+    const { avatarUrl } = e.detail;
+    this.setData({
+      tempAvatarUrl: avatarUrl
+    });
+    this.checkUserInfoReady();
+  },
+
+  // 昵称输入回调
+  onNickNameInput(e: any) {
+    this.setData({
+      tempNickName: e.detail.value
+    });
+    this.checkUserInfoReady();
+  },
+
+  // 检查用户信息是否完整
+  checkUserInfoReady() {
+    const isReady = !!this.data.tempAvatarUrl && !!this.data.tempNickName;
+    this.setData({ isUserInfoReady: isReady });
+  },
+
+  // 提交用户信息
+  submitUserInfo() {
+    if (!this.data.isUserInfoReady) {
+      wx.showToast({
+        title: '请完善头像和昵称',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 更新全局用户信息
+    const userInfo = {
+      avatarUrl: this.data.tempAvatarUrl,
+      nickName: this.data.tempNickName
+    };
+    app.globalData.userInfo = userInfo;
+
+    // 更新到后台
+    wx.showLoading({ title: '更新信息中...' });
+    api.updateUserInfo(userInfo).then(() => {
+      this.setData({ userInfoVisible: false });
+      // 执行后续参与逻辑
+      this.joinActivityApi();
+    }).catch(err => {
+      wx.showToast({
+        title: '更新失败',
+        icon: 'error'
+      });
+    }).finally(() => {
+      wx.hideLoading();
+    });
+  },
 
     /**
      * 生命周期函数--监听页面初次渲染完成

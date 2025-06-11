@@ -1,4 +1,4 @@
-<image src="/subPackage/img/wedding.jpg" mode="" class="bg" />
+<image src="{{imgPath}}" mode="" class="bg" />
 <!-- 顶部 -->
 <view class="wrapper">
     <view wx:if="{{true}}">
@@ -12,14 +12,14 @@
 <!-- 底部 -->
 <view class="wrapperBottom">
     <view class="wrap">
-        <view class="btn-join" bindtap="joinActivity" wx:if="{{!join && !open}}">
-            <span class="jump-text">点击</span>
-            <span class="jump-text">送</span>
-            <span class="jump-text">祝福</span>
-            <span class="jump-text">参与</span>
-            <span class="jump-text">抽</span>
-            <span class="jump-text">奖</span>
-            <!-- 立即参与抽奖 -->
+        <!-- 原有按钮修改为触发弹窗 -->
+        <view class="btn-join" bindtap="showUserInfoPopup" wx:if="{{!join && !open}}">
+          <span class="jump-text">点击</span>
+          <span class="jump-text">送</span>
+          <span class="jump-text">祝福</span>
+          <span class="jump-text">参与</span>
+          <span class="jump-text">抽</span>
+          <span class="jump-text">奖</span>
         </view>
 
         <view class="btn-is-join" bindtap="showStatus" wx:if="{{join && !open}}">
@@ -99,4 +99,37 @@
             </view>
         </view>
     </view>
+</t-popup>
+
+
+<!-- 用户信息填写弹窗 -->
+<t-popup visible="{{userInfoVisible}}" placement="center">
+  <view class="user-info-popup">
+    <view class="popup-header">完善信息</view>
+    
+    <!-- 头像选择 -->
+    <view class="avatar-section">
+      <text class="label">头像</text>
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{tempAvatarUrl || defaultAvatarUrl}}" mode="aspectFill" />
+      </button>
+    </view>
+    
+    <!-- 昵称输入 -->
+    <view class="nickname-section">
+      <text class="label">昵称</text>
+      <input 
+        type="nickname" 
+        class="nickname-input" 
+        placeholder="请输入昵称" 
+        value="{{tempNickName}}"
+        bindinput="onNickNameInput"
+      />
+    </view>
+    
+    <view class="popup-buttons">
+      <t-button theme="primary" bindtap="submitUserInfo">确认</t-button>
+      <t-button bindtap="closeUserInfoPopup">取消</t-button>
+    </view>
+  </view>
 </t-popup>
