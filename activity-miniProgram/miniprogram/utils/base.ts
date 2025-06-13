@@ -6,7 +6,7 @@ const accountInfo = wx.getAccountInfoSync()
 const envVersion = accountInfo.miniProgram.envVersion || 'release'
 
 const GDEnvs = {
-    develop: 'https://weddingshow.cpolar.top',
+    develop: 'http://localhost:8888',
     trial: 'https://weddingshow.cpolar.top',
     release: 'https://weddingshow.cpolar.top',
 }

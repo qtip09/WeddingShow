@@ -330,12 +330,15 @@ page {
     color: #FFFFFF;
 }
 
+
 /* 用户信息弹窗样式 */
 .user-info-popup {
   width: 80vw;
+  max-width: 600rpx;
   background: #fff;
-  border-radius: 16rpx;
+  border-radius: 30rpx;
   padding: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
 }
 
 .popup-header {
@@ -343,17 +346,38 @@ page {
   font-weight: bold;
   text-align: center;
   margin-bottom: 40rpx;
+  color: #FF6060;
+  position: relative;
+  padding-bottom: 20rpx;
+}
+
+.popup-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 6rpx;
+  background: linear-gradient(90deg, #FF7272, #FFAB87);
+  border-radius: 3rpx;
 }
 
 .avatar-section, .nickname-section {
   display: flex;
   align-items: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
+  padding: 20rpx;
+  background-color: #FFF9F9;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 114, 114, 0.1);
 }
 
 .label {
   width: 120rpx;
   font-size: 32rpx;
+  color: #666;
+  font-weight: 500;
 }
 
 .avatar-btn {
@@ -362,28 +386,87 @@ page {
   background: transparent;
   border: none;
   line-height: 1;
+  position: relative;
+}
+
+.avatar-btn::after {
+  content: '点击修改';
+  position: absolute;
+  bottom: -40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 25rpx;
+  color: #999;
+  white-space: nowrap;
 }
 
 .avatar {
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  border: 1px solid #eee;
+  border: 2px solid #FFAB87;
+  box-shadow: 0 4rpx 12rpx rgba(255, 114, 114, 0.2);
+  transition: all 0.3s;
+}
+
+.avatar-btn:active .avatar {
+  transform: scale(0.95);
 }
 
 .nickname-input {
   flex: 1;
-  border: 1px solid #eee;
-  padding: 20rpx;
-  border-radius: 8rpx;
+  border: 1px solid #FFD6D6;
+  padding: 20rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+.nickname-input:focus {
+  border-color: #FF7272;
+  box-shadow: 0 0 0 2rpx rgba(255, 114, 114, 0.2);
 }
 
 .popup-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 40rpx;
+  margin-top: 60rpx;
+  gap: 20rpx;
 }
 
 .popup-buttons t-button {
-  width: 48%;
+  flex: 1;
+  height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
 }
+
+.popup-buttons t-button[theme="primary"] {
+  background: linear-gradient(90deg, #FF7272, #FFAB87);
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 114, 114, 0.3);
+  color: white;
+}
+
+.popup-buttons t-button[theme="primary"]:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 114, 114, 0.3);
+}
+
+.popup-buttons t-button:not([theme="primary"]) {
+  background: #fff;
+  color: #FF7272;
+  border: 1px solid #FF7272;
+}
+
+.popup-buttons t-button:not([theme="primary"]):active {
+  background: #FFF0F0;
+}
+

@@ -38,12 +38,3 @@ admin-password: @admin.admin-password@
 
 send-bullet-able: true
 
-weddingshow:
-  profile: /Users/liudw/Documents/wedding-show/uploadPath
-
-  local:
-    storagePath: /Users/liudw/Documents/wedding-show/uploadPath
-    # 这个地方应该是wx模块的WxStorageController的fetch方法对应的地址
-    # https://www.tianlihotel.com/wx/storage/fetch/
-    # https://www.tianlihotel.com/wx/storage/fetch/
-    address: http://localhost:8888/file/fetch

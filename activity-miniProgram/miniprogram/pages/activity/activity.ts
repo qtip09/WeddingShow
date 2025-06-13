@@ -104,13 +104,18 @@ Page({
     },
 
     joinActivity() {
-        if (!!app.globalData.userInfo.nickName) {
+        console.log(app.globalData.userInfo.nickName);
+        if (!!app.globalData.userInfo.nickName && app.globalData.userInfo.nickName!= '微信用户') {
             this.joinActivityApi()
             return;
+        }else{
+            wx.showToast({
+              title: '请完善头像和昵称',
+              icon: 'none'
+            });
+            return;
         }
-        getUserInfo().then(() => {
-            this.joinActivityApi()
-        })
+        
     },
 
     joinActivityApi() {
@@ -178,7 +183,7 @@ Page({
     // 显示用户信息弹窗
   showUserInfoPopup() {
     // 如果已有用户信息，直接参与
-    if (app.globalData.userInfo?.nickName) {
+    if (app.globalData.userInfo?.nickName && app.globalData.userInfo.nickName!= '微信用户') {
       this.joinActivityApi();
       return;
     }
@@ -186,7 +191,7 @@ Page({
     this.setData({
       userInfoVisible: true,
       tempAvatarUrl: app.globalData.userInfo?.avatarUrl || '',
-      tempNickName: app.globalData.userInfo?.nickName || ''
+      tempNickName: app.globalData.userInfo?.nickName && app.globalData.userInfo.nickName!= '微信用户' || ''
     });
   },
 
@@ -200,9 +205,22 @@ Page({
   // 选择头像回调
   onChooseAvatar(e: any) {
     const { avatarUrl } = e.detail;
+    wx.uploadFile({
+      url: baseUrl + "/file/common/upload",
+      filePath: avatarUrl,
+      name: 'file',
+      success: (res) => {
+          const data = JSON.parse(res.data);
+          console.log(data.data);
+          this.setData({
+            tempAvatarUrl:baseUrl+"/file/fetch/" + data.data.fileId
+          });
+      }
+  })
     this.setData({
       tempAvatarUrl: avatarUrl
     });
+
     this.checkUserInfoReady();
   },
 
@@ -216,7 +234,7 @@ Page({
 
   // 检查用户信息是否完整
   checkUserInfoReady() {
-    const isReady = !!this.data.tempAvatarUrl && !!this.data.tempNickName;
+    const isReady = !!this.data.tempAvatarUrl && !!this.data.tempNickName && this.data.tempNickName!= '微信用户';
     this.setData({ isUserInfoReady: isReady });
   },
 

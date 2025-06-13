@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.tomcat.util.buf.UEncoder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -323,7 +324,7 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
             // 判断是否开奖
             val existsWin = activityWinService.getBaseMapper().exists(Wrappers.<ActivityWin>lambdaQuery()
                     .eq(ActivityWin::getActivityId, activity.getId()));
-            if (existsWin) {
+            /*if (existsWin) {
                 // 判断是否中奖
                 return isUserPrize(activity, user);
             } else {
@@ -346,6 +347,14 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
                 }
                 // 判断是否中奖
                 return isUserPrize(activity, user);
+            }*/
+            /*
+            * 不需要小程序开奖
+            * */
+            if (existsWin){
+                return isUserPrize(activity, user);
+            }else {
+                return Triple.of(1, null, "已加入活动，活动没开奖");
             }
         }
         return Triple.of(0, null, "未加入当前活动");
@@ -381,5 +390,99 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
 
     private Activity getActivity(String code) {
         return getOne(Wrappers.<Activity>lambdaQuery().eq(Activity::getCode, code));
+    }
+
+
+
+    public List<User> getJoinUserList(String code){
+        Activity activity = getActivity(code);
+        if (activity == null || activity.getActivityEndDate().before(new Date())){
+            throw new RuntimeException("活动异常或已开奖");
+        }
+        LambdaQueryWrapper<ActivityJoin> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(ActivityJoin::getActivityId,activity.getId());
+        List<ActivityJoin> activityJoinList = activityJoinService.list(lqw);
+        List<Integer> uidList = activityJoinList.stream().map(ActivityJoin::getUid).collect(Collectors.toList());
+        if (uidList.size() <=0){
+            throw new RuntimeException("活动参与人数异常");
+        }
+        LambdaQueryWrapper<User> lqwUser = new LambdaQueryWrapper<>();
+        lqwUser.notLike(User::getNickName,"微信用户");
+        lqwUser.ne(User::getNickName,"");
+        List<User> userList = userService.list(lqwUser);
+        userList = userList.stream().filter(user -> uidList.contains(user.getId())).collect(Collectors.toList());
+        if (userList.size() <=0){
+            throw new RuntimeException("活动参与人数异常");
+        }
+        return userList;
+    }
+
+    public List<ActivityWinUser> winUser(String code,Integer prizeId){
+        Activity activity = getActivity(code);
+        if (activity == null || activity.getActivityEndDate().before(new Date())){
+            throw new RuntimeException("活动异常或已开奖");
+        }
+        ActivityPrize activityPrize = activityPrizeService.getById(prizeId);
+        if (activityPrize == null || activityPrize.getDeleted().equals(true) || activityPrize.getCount()<=0){
+            throw new RuntimeException("奖品异常");
+        }
+        LambdaQueryWrapper<User> lqwUser = new LambdaQueryWrapper<>();
+        lqwUser.notLike(User::getNickName,"微信用户");
+        lqwUser.ne(User::getNickName,"");
+        List<User> userList = userService.list(lqwUser);
+        List<ActivityJoin> activityJoins = activityJoinService.list(Wrappers.<ActivityJoin>lambdaQuery().eq(ActivityJoin::getActivityId, activity.getId()));
+        List<Integer> activityJoinUids = activityJoins.stream().map(ActivityJoin::getUid).collect(Collectors.toList());
+        List<User> joinUserList = userList.stream().filter(user -> activityJoinUids.contains(user.getId())).collect(Collectors.toList());
+        //activityJoins = activityJoins.stream().filter(activityJoin -> finalUserList.contains(activityJoin.getUid())).collect(Collectors.toList());
+        //List<Integer> joinUidList = activityJoins.stream().map(ActivityJoin::getUid).collect(Collectors.toList());
+        List<Integer> joinUidList = joinUserList.stream().map(User::getId).collect(Collectors.toList());
+        List<ActivityWinSpecify> activityWinSpecifyList = activityWinSpecifyService.list(Wrappers.<ActivityWinSpecify>lambdaQuery()
+                .eq(ActivityWinSpecify::getActivityPrizeId,prizeId)
+                .eq(ActivityWinSpecify::getActivityId,activity.getId())
+                .eq(ActivityWinSpecify::getDeleted,false));
+
+        List<ActivityWinUser> activityWinUserList = new ArrayList<>();
+        for (int i=0;i<activityPrize.getCount();i++){
+            val activityWin = new ActivityWin();
+            val activityWinUser = new ActivityWinUser();
+            for (int j=0;j<activityWinSpecifyList.size();j++){
+                ActivityWinSpecify activityWinSpecify = activityWinSpecifyList.get(j);
+                if (joinUidList.contains(activityWinSpecify.getUid())){
+                    activityWin.setActivityId(activity.getId())
+                            .setUid(activityWinSpecify.getUid())
+                            .setActivityPrizeId(activityPrize.getId())
+                            .setDate(new Date());
+                    User winUser = joinUserList.stream().filter(user -> user.getId().equals(activityWin.getUid())).findFirst().get();
+                    activityWinUser.setUserName(winUser.getNickName())
+                                    .setOpenid(winUser.getOpenid())
+                                            .setPrizeName(activityPrize.getPrizeName())
+                                                    .setPrizeNum(0)
+                                                            .setIsGet(false);
+                    activityWinService.save(activityWin);
+                    activityWinSpecifyList.remove(j);
+                    activityWinUserList.add(activityWinUser);
+                    break;
+                }
+            }
+            if (activityWin.getId() == null || activityWin.getId().equals(0)){
+                ActivityJoin join = getRandomValue(activityJoins);
+                if (join == null) break;
+                activityWin.setActivityId(activity.getId())
+                        .setUid(join.getUid())
+                        .setActivityPrizeId(activityPrize.getId())
+                        .setDate(new Date());
+                User winUser = joinUserList.stream().filter(user -> user.getId().equals(activityWin.getUid())).findFirst().get();
+                activityWinUser.setUserName(winUser.getNickName())
+                        .setOpenid(winUser.getOpenid())
+                        .setPrizeName(activityPrize.getPrizeName())
+                        .setPrizeNum(0)
+                        .setIsGet(false);
+                activityWinService.save(activityWin);
+                activityWinUserList.add(activityWinUser);
+            }
+
+        }
+        return activityWinUserList;
+
     }
 }

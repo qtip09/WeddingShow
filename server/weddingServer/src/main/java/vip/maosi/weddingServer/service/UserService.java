@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import vip.maosi.weddingServer.domain.User;
 import vip.maosi.weddingServer.mapper.UserMapper;
+
+import java.util.List;
+
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
 

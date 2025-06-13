@@ -132,4 +132,6 @@ public class ActivityController {
         val list = activityService.getActivityWinList(code);
         return RGenerator.resSuccess(list);
     }
+
+
 }
