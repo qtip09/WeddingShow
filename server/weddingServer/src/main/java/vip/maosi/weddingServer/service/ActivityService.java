@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.tomcat.util.buf.UEncoder;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -433,9 +434,10 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
         List<ActivityJoin> activityJoins = activityJoinService.list(Wrappers.<ActivityJoin>lambdaQuery().eq(ActivityJoin::getActivityId, activity.getId()));
         List<Integer> activityJoinUids = activityJoins.stream().map(ActivityJoin::getUid).collect(Collectors.toList());
         List<User> joinUserList = userList.stream().filter(user -> activityJoinUids.contains(user.getId())).collect(Collectors.toList());
-        //activityJoins = activityJoins.stream().filter(activityJoin -> finalUserList.contains(activityJoin.getUid())).collect(Collectors.toList());
+
         //List<Integer> joinUidList = activityJoins.stream().map(ActivityJoin::getUid).collect(Collectors.toList());
         List<Integer> joinUidList = joinUserList.stream().map(User::getId).collect(Collectors.toList());
+        activityJoins = activityJoins.stream().filter(activityJoin -> joinUidList.contains(activityJoin.getUid())).collect(Collectors.toList());
         List<ActivityWinSpecify> activityWinSpecifyList = activityWinSpecifyService.list(Wrappers.<ActivityWinSpecify>lambdaQuery()
                 .eq(ActivityWinSpecify::getActivityPrizeId,prizeId)
                 .eq(ActivityWinSpecify::getActivityId,activity.getId())
@@ -454,16 +456,23 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
                             .setDate(new Date());
                     User winUser = joinUserList.stream().filter(user -> user.getId().equals(activityWin.getUid())).findFirst().get();
                     activityWinUser.setUserName(winUser.getNickName())
+                            .setAvatarUrl(winUser.getAvatarUrl())
                                     .setOpenid(winUser.getOpenid())
                                             .setPrizeName(activityPrize.getPrizeName())
-                                                    .setPrizeNum(0)
+                                                    .setPrizeNum(1)
                                                             .setIsGet(false);
                     activityWinService.save(activityWin);
                     activityWinSpecifyList.remove(j);
+                    joinUserList = joinUserList.stream().filter(joinuser->!joinuser.getId().equals(activityWin.getUid())).collect(Collectors.toList());
+                    activityJoins = activityJoins.stream().filter(activityJoin -> !activityJoin.getUid().equals(activityWin.getUid())).collect(Collectors.toList());
                     activityWinUserList.add(activityWinUser);
                     break;
                 }
             }
+            if (joinUserList.size()<=0 || activityJoins.size()<=0){
+                break;
+            }
+
             if (activityWin.getId() == null || activityWin.getId().equals(0)){
                 ActivityJoin join = getRandomValue(activityJoins);
                 if (join == null) break;
@@ -471,8 +480,11 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
                         .setUid(join.getUid())
                         .setActivityPrizeId(activityPrize.getId())
                         .setDate(new Date());
+                log.error(JSONObject.valueToString(activityWin));
+                log.error(JSONObject.valueToString(joinUserList));
                 User winUser = joinUserList.stream().filter(user -> user.getId().equals(activityWin.getUid())).findFirst().get();
                 activityWinUser.setUserName(winUser.getNickName())
+                        .setAvatarUrl(winUser.getAvatarUrl())
                         .setOpenid(winUser.getOpenid())
                         .setPrizeName(activityPrize.getPrizeName())
                         .setPrizeNum(0)
