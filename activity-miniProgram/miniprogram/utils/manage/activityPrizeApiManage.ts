@@ -57,5 +57,13 @@ export default class activityApi {
       baseUrl + '/activity/addActivityWinSpecify',
       data
     )
+
+    static deleteAwardUser = (data: any) =>
+    httpRequest.get<any>(
+      baseUrl + '/activity/delActivityWinSpecify',
+      data
+    )
+
+    
     
 }

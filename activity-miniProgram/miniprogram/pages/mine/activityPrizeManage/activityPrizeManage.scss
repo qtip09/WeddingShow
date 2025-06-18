@@ -27,6 +27,7 @@
   /* 可选：添加左右边距（若需要按钮与屏幕边缘有间隔） */
    padding: 0 32rpx;
 }
+/* 获奖人员管理弹窗 */
 .award-user-dialog {
   position: fixed;
   left: 0;
@@ -39,6 +40,7 @@
   align-items: center;
   justify-content: center;
 }
+
 
 .mask {
   position: absolute;
@@ -163,3 +165,175 @@
 .form-buttons .tdesign-button {
   margin-left: 20rpx;
 }
+
+/* 搜索结果项样式 */
+.search-result-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 选中状态样式 */
+.search-result-item.selected {
+  background-color: #f0f8ff;
+  color: #1890ff;
+}
+
+/* 选中图标 */
+.selected-icon {
+  margin-left: 10px;
+  color: #1890ff;
+}
+
+/* 搜索结果容器 */
+.search-results-container {
+  height: 300px; /* 固定高度 */
+  overflow-y: auto;
+  border: 1px solid #eee;
+  margin-top: 10px;
+}
+
+/* 加载提示样式 */
+.no-more-text, .loading-text {
+  text-align: center;
+  padding: 10px;
+  color: #999;
+  font-size: 14px;
+}
+
+/* 保持原有选中样式 */
+.search-result-item.selected {
+  background-color: #f0f8ff;
+  color: #1890ff;
+}
+
+
+.dialog-wrapper {
+  width: 90%;
+  max-width: 680rpx;
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 40rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  font-size: 34rpx;
+  font-weight: 500;
+}
+
+.prize-info {
+  padding: 24rpx 40rpx;
+  background: #f5f7fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.user-list-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.list-header {
+  padding: 0 40rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 40rpx;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.add-user-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 0;
+  color: #1677ff;
+  font-size: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.add-user-form {
+  padding: 24rpx 40rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.search-results-wrapper {
+  position: relative;
+  height: 300rpx;
+}
+
+.search-results-container {
+  height: 100%;
+  border: 1rpx solid #eee;
+  border-radius: 8rpx;
+}
+
+.search-result-item {
+  padding: 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.search-result-item.selected {
+  background-color: #f0f8ff;
+  color: #1890ff;
+}
+
+.selected-icon {
+  margin-left: 10rpx;
+  color: #1890ff;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32rpx;
+}
+
+.form-buttons .tdesign-button {
+  margin-left: 20rpx;
+}
+
+/* 加载状态 */
+.no-more-text, .loading-text {
+  text-align: center;
+  padding: 20rpx;
+  color: #999;
+  font-size: 26rpx;
+}
+

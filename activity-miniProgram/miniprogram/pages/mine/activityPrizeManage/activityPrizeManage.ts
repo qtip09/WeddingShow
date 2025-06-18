@@ -36,6 +36,11 @@ Page({
           openId: ''
     
         },
+        selectedUserId: null,
+        searchPageNum: 1,      // 搜索结果的当前页码
+        searchPageSize: 10,    // 每页显示数量
+        hasMoreSearch: true,   // 是否还有更多搜索结果
+        isSearchLoading: false, // 是否正在加载搜索结果
         // 新增搜索相关数据
         searchKey: '',       // 搜索关键词
         searchResults: []   // 搜索结果列表
@@ -144,9 +149,21 @@ Page({
     onActivityPrizeAddSubmit(data) {
       const { prizeName, count ,fileId} = data;
       console.log('新增奖项:', prizeName, count);
-      
-      // 这里可以调用 API 提交数据
-      // 例如：api.addPrize({ prizeName, count }).then(...)
+      api.addActivityPrize(data).then((res) => {
+        if(res.code == 200 && res.data == true){
+          wx.showToast({
+            title: '新增商品成功',
+            icon: 'success'
+          });
+          this.getPage(this.data.pageNum, this.data.pageSize, true);
+        }else{
+          wx.showToast({
+            title: '新增失败',
+            icon: 'none'
+          });
+        }
+      });
+
     },
     // 删除奖品
     onDeleteTap(e: any) {
@@ -270,20 +287,42 @@ Page({
   // 删除用户
   onDeleteUser(e) {
     const userId = e.currentTarget.dataset.id;
+    const activityWinSpecifyId = e.currentTarget.dataset.id;
+    console.log(userId);
     wx.showModal({
       title: '确认删除',
       content: '确定要删除该获奖人员吗？',
       success: (res) => {
         if (res.confirm) {
           // 从列表中移除用户（实际需调用API）
-          const newUsers = this.data.awardUsers.filter(item => item.id !== userId);
-          this.setData({
-            awardUsers: newUsers,
-            'currentPrize.remainingCount': this.data.currentPrize.remainingCount + 1
+          api.deleteAwardUser({
+            "activityWinSpecifyId": activityWinSpecifyId
+          }).then((res) => {
+            if (res.code === 200 && res.data == true ) {
+              wx.showToast({
+                title: '删除成功',
+                icon: 'success'
+              });
+              const newUsers = this.data.awardUsers.filter(item => item.id !== userId);
+              this.setData({
+                awardUsers: newUsers,
+                'currentPrize.remainingCount': this.data.currentPrize.remainingCount + 1
+              });
+    
+            } else {
+              wx.showToast({
+                title: res.msg || '删除失败',
+                icon: 'none'
+              });
+            }
+          }).catch(() => {
+            wx.showToast({
+              title: '网络错误，请重试',
+              icon: 'none'
+            });
           });
-          
-          // 实际项目中调用API删除
-          // api.deleteAwardUser(userId).then(...)
+
+ 
         }
       }
     });
@@ -298,6 +337,8 @@ Page({
       awardUserDialogShow: false,
       addUserFormShow: false
     });
+    this.hideAddUserForm();
+    //this.fetchAwardUsers(this.data.currentPrize); // 刷新用户列表
   },
   
   // 新增：处理遮罩层点击事件（阻止关闭弹窗）
@@ -316,24 +357,57 @@ Page({
   handleSearch() {
     
     const { searchKey } = this.data;
-    if (!searchKey.trim()) return; // 空值不搜索
-    console.log(searchKey);
-    // 调用后端搜索接口（示例：假设接口返回用户列表）
-    api.searchUsers({ name: searchKey }).then(res => {
+    if (!searchKey.trim()) return;
+    
+    // 重置分页状态
+    this.setData({
+      searchPageNum: 1,
+      hasMoreSearch: true,
+      searchResults: []
+    });
+    
+    this.loadSearchResults(true);
+  },
+  // 搜索结果滚动到底部
+  onSearchScrollToLower() {
+    this.loadSearchResults();
+  },
+  // 分页加载搜索结果
+  loadSearchResults(isNewSearch = false) {
+    if (this.data.isSearchLoading || !this.data.hasMoreSearch) return;
+    
+    this.setData({ isSearchLoading: true });
+    
+    api.searchUsers({ 
+      name: this.data.searchKey,
+      pageNum: this.data.searchPageNum,
+      pageSize: this.data.searchPageSize
+    }).then(res => {
       if (res.code === 200) {
-        this.setData({ searchResults: res.data || [] });
-      } else {
+        const newData = res.data.records || []; // 注意这里取 records
+        const hasMore = this.data.searchPageNum < res.data.pages;
+          
+        this.setData({
+          searchResults: isNewSearch ? newData : [...this.data.searchResults, ...newData],
+          hasMoreSearch: hasMore,
+          searchPageNum: this.data.searchPageNum + 1
+        });
+      }else {
         wx.showToast({ title: '搜索失败', icon: 'none' });
       }
+    }).finally(() => {
+      this.setData({ isSearchLoading: false });
     });
   },
+
 
   // 从搜索结果中选择用户
   selectUserFromSearch(e) {
     const selectedUser = e.currentTarget.dataset.user;
     console.log(selectedUser);
     this.setData({
-      newUser: { uid: selectedUser.id, name: selectedUser.nickName ,openId: selectedUser.openid}
+      newUser: { uid: selectedUser.id, name: selectedUser.nickName ,openId: selectedUser.openid},
+      selectedUserId: selectedUser.id // 记录选中的用户ID
     });
     console.log(this.data.newUser);
   },
@@ -353,10 +427,19 @@ Page({
       uid: this.data.newUser.uid,
       name: this.data.newUser.name
     }).then(res => {
-      if (res.code === 200) {
+      if (res.code === 200 && res.data == true) {
         // 添加成功逻辑
+        wx.showToast({
+          title: '添加成功',
+          icon: 'success'
+        });
         this.hideAddUserForm();
         this.fetchAwardUsers(this.data.currentPrize); // 刷新用户列表
+      }else{
+        wx.showToast({
+          title: '添加失败',
+          icon: 'none'
+        });
       }
     });
   },
@@ -367,7 +450,8 @@ Page({
       addUserFormShow: false,
       searchKey: '',
       searchResults: [],
-      newUser: { userName: '' }
+      newUser: { userName: '' },
+      selectedUserId: null
     });
   }
   

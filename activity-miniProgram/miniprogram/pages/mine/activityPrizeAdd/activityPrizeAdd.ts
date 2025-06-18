@@ -67,11 +67,10 @@ handleClick(e: any) {
       "fileId": fileId         
     }
     console.log(add);
-    api.addActivityPrize(add);
-
+    
     const pages = getCurrentPages();
     const prevPage = pages[pages.length - 2];
-    prevPage.onActivityPrizeAddSubmit({ prizeName, count, filePath });
+    prevPage.onActivityPrizeAddSubmit({ prizeName, count, fileId, filePath });
     wx.navigateBack();
   }
 });

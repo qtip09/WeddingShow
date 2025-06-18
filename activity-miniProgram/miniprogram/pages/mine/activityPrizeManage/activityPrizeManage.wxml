@@ -55,7 +55,6 @@
 
 <!-- 获奖人员管理弹窗 -->
 <view class="award-user-dialog" wx:if="{{awardUserDialogShow}}">
-  
   <view class="dialog-wrapper">
     <view class="dialog-content">
       <!-- 标题栏 -->
@@ -84,7 +83,7 @@
           <text class="user-count">{{awardUsers.length}}人</text>
         </view>
         
-        <view class="user-list">
+        <scroll-view class="user-list" scroll-y>
           <block wx:for="{{awardUsers}}" wx:key="id">
             <view class="user-item">
               <view class="user-info">
@@ -98,6 +97,7 @@
                 bindtap="onDeleteUser"
                 data-id="{{item.id}}"
               />
+              <t-block></t-block>
             </view>
           </block>
           
@@ -106,7 +106,7 @@
             <t-icon name="empty" size="48" color="#cccccc" />
             <text>暂无获奖人员</text>
           </view>
-        </view>
+        </scroll-view>
       </view>
       
       <!-- 新增按钮 -->
@@ -119,7 +119,6 @@
       <view class="add-user-form" wx:if="{{addUserFormShow}}">
         <view class="tdesign-form-item">
           <view class="tdesign-form-label">姓名</view>
-          <!-- 改为搜索输入框，添加搜索按钮和列表 -->
           <view class="search-container">
             <t-input 
               class="tdesign-form-input" 
@@ -138,22 +137,35 @@
             />
           </view>
 
-          <!-- 搜索结果列表 -->
-          <view class="search-result" wx:if="{{searchResults.length > 0}}">
-            <block wx:for="{{searchResults}}" wx:key="userId">
-              <view 
-                class="result-item" 
-                bindtap="selectUserFromSearch" 
-                data-user="{{item}}"
-              >
-                {{item.nickName}}（{{item.openid || '未绑定'}}）
+          <!-- 搜索结果列表容器 -->
+          <view class="search-results-wrapper">
+            <scroll-view 
+              class="search-results-container"
+              scroll-y
+              bindscrolltolower="onSearchScrollToLower"
+            >
+              <block wx:for="{{searchResults}}" wx:key="id">
+                <view 
+                  class="search-result-item {{item.id === selectedUserId ? 'selected' : ''}}" 
+                  bindtap="selectUserFromSearch" 
+                  data-user="{{item}}"
+                >
+                  <text>{{item.nickName}}</text>
+                  <text wx:if="{{item.id === selectedUserId}}" class="selected-icon">✓</text>
+                </view>
+              </block>
+              
+              <view wx:if="{{!hasMoreSearch && searchResults.length > 0}}" class="no-more-text">
+                没有更多结果了
               </view>
-            </block>
+              <view wx:if="{{isSearchLoading}}" class="loading-text">
+                加载中...
+              </view>
+            </scroll-view>
           </view>
         </view>
 
-        <!-- 移除手机号输入框 -->
-        
+        <!-- 操作按钮区域 -->
         <view class="form-buttons">
           <t-button 
             theme="default" 

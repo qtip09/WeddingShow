@@ -95,5 +95,9 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+
+  onActivityPrizeAddSubmit(){
+    
   }
 })

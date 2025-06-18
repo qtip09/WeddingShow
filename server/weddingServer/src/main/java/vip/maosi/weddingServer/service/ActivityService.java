@@ -3,6 +3,7 @@ package vip.maosi.weddingServer.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -23,6 +24,7 @@ import vip.maosi.weddingServer.domain.*;
 import vip.maosi.weddingServer.dto.*;
 import vip.maosi.weddingServer.mapper.ActivityMapper;
 import vip.maosi.weddingServer.service.wx.WXService;
+import vip.maosi.weddingServer.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -242,7 +244,7 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
             dto.setActivityId(temp.getActivityId());
             dto.setActivityPrizeId(temp.getActivityPrizeId());
             dto.setUid(temp.getUid());
-            User user = userList.stream().filter(p -> p.getId() == temp.getUid()).collect(Collectors.toList()).get(0);
+            User user = userList.stream().filter(p -> p.getId().equals(temp.getUid())).collect(Collectors.toList()).get(0);
             dto.setOpenId(user.getOpenid());
             dto.setNickName(user.getNickName());
             dto.setCreateDate(temp.getCreateDate());
@@ -286,10 +288,18 @@ public class ActivityService extends ServiceImpl<ActivityMapper, Activity> {
         return flag;
     }
 
-    public List<User> searchUsers(String name){
+    public Boolean delActivityWinSpecify(Integer activityWinSpecifyId){
+        Boolean flag = activityWinSpecifyService.removeById(activityWinSpecifyId);
+        return flag;
+    }
+
+
+    public Page<User> searchUsers(String name,Integer pageNum,Integer pageSize){
+        // 创建分页对象
+        Page<User> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        lqw.like(User::getNickName,name);
-        return userService.list(lqw);
+        lqw.like(StringUtils.isNotBlank(name),User::getNickName,name);
+        return userService.page(page,lqw);
     }
     public Pair<Integer, String> joinActivity(String openid, String code) {
         val activity = getActivity(code);

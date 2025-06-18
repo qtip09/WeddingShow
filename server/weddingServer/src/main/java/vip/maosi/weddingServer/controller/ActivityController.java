@@ -1,5 +1,6 @@
 package vip.maosi.weddingServer.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.val;
@@ -80,13 +81,18 @@ public class ActivityController {
         return RGenerator.resSuccess(activityService.getActivityWinSpecifyList(activityPrize));
     }
     @GetMapping("searchUsers")
-    public ResEntity<List<User>> searchUsers(@RequestParam String name){
-        return RGenerator.resSuccess(activityService.searchUsers(name));
+    public ResEntity<Page<User>> searchUsers(@RequestParam String name, Integer pageNum, Integer pageSize){
+        return RGenerator.resSuccess(activityService.searchUsers(name,pageNum,pageSize));
     }
 
     @PostMapping("addActivityWinSpecify")
     public ResEntity<Boolean> addActivityWinSpecify(@RequestBody addActivityWinSpecifyBo bo){
         return RGenerator.resSuccess(activityService.addActivityWinSpecify(bo));
+    }
+
+    @GetMapping("delActivityWinSpecify")
+    public ResEntity<Boolean> addActivityWinSpecify(@RequestParam Integer activityWinSpecifyId){
+        return RGenerator.resSuccess(activityService.delActivityWinSpecify(activityWinSpecifyId));
     }
 
     /**

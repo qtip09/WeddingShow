@@ -126,12 +126,26 @@ interface Winner {
   prizeNum: number
 }
 
+interface ApiResponse<T> {
+  data: T
+  code: number
+  message?: string
+}
+
+interface PrizeListResponse {
+  activityPrizeDtoList: Prize[]
+}
+
+interface LotteryResultResponse {
+  data: Winner[]
+}
+
 const prizes = ref<Prize[]>([])
 const participants = ref<Participant[]>([])
 const selectedPrize = ref<Prize | null>(null)
 const winners = ref<Winner[]>([])
 const isRotating = ref(false)
-const rotateInterval = ref<NodeJS.Timeout | null>(null)
+const rotateInterval = ref<ReturnType<typeof setTimeout> | null>(null)
 const currentParticipantIndex = ref(0)
 const emit = defineEmits(['close'])
 
@@ -162,8 +176,11 @@ const initData = async () => {
       getPrizes(),
       getParticipants()
     ])
-    prizes.value = prizesRes.data.activityPrizeDtoList || []
-    participants.value = participantsRes.data || []
+    
+    // 安全类型转换
+    const response = prizesRes as unknown as ApiResponse<PrizeListResponse>
+    prizes.value = response?.data?.activityPrizeDtoList || []
+    participants.value = (participantsRes as ApiResponse<Participant[]>).data || []
   } catch (error) {
     console.error('初始化抽奖数据失败:', error)
   }
@@ -188,23 +205,24 @@ const startLottery = async () => {
   
   isRotating.value = true
   winners.value = []
-  
   startParticipantRotation()
   
   try {
     const response = await drawLottery(selectedPrize.value?.id)
-
-    winners.value = response.data || []
-    console.log(winners.value);
-    console.log(winners.value.length);
-    if (selectedPrize.value && winners.value.length > 0) {
-      var cnt = selectedPrize.value.count
-      selectedPrize.value.count = cnt - winners.value.length
+    
+    // 类型安全的赋值
+    if (Array.isArray(response.data)) {
+      winners.value = response.data as Winner[]
+    }
+    
+    // 更新奖品数量
+    if (selectedPrize.value && typeof selectedPrize.value.count === 'number' && winners.value.length > 0) {
+      selectedPrize.value.count -= winners.value.length
     }
   } catch (error) {
     console.error('抽奖失败:', error)
   } finally {
-    if (rotateInterval.value) {
+    if (rotateInterval.value !== null) {
       clearInterval(rotateInterval.value)
       rotateInterval.value = null
     }
